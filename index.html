@@ -5,58 +5,107 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,400&display=swap" rel="stylesheet">
     <title>Calculator</title>
   </head>
   <body>
-    <div class="calculator__container">
-      <input class="calculator__output" type="text" id="result" readonly>
-      <div class="wrapper">
-          <div class="empty"> </div>
-          <button class="clear" onclick="clearResult()"><i class="delete fi fi-rr-delete"></i></button>
+    <div class="container-container">
+      <h1 class="main__text">Calculator Program</h1>
+      <div class="calculator__container">
+        <input class="calculator__output" type="text" id="result" readonly>
+        <div class="wrapper">
+            <div class="empty"> </div>
+            <button class="trash clear" onclick="clearResult()"><i class="fi fi-rr-trash"></i></button>
+            <button class="clear delete" onclick="clearResultOnebyOne()"><i class="fi fi-rr-delete"></i></button>
+        </div>
+        <div class="buttons">
+            <button class="operations btn" onclick="addToResult('*')">*</button>
+            <button class="operations btn" onclick="addToResult('/')">/</button>
+            <button class="operations btn" onclick="addToResult('+')">+</button>
+            <button class="operations btn" onclick="addToResult('-')">-</button>
+            <button class="numbers btn" onclick="addToResult('1')">1</button>
+            <button class="numbers btn" onclick="addToResult('2')">2</button>
+            <button class="numbers btn" onclick="addToResult('3')">3</button>
+            <button class="numbers btn" onclick="addToResult('4')">4</button>
+            <button class="numbers btn" onclick="addToResult('5')">5</button>
+            <button class="numbers btn" onclick="addToResult('6')">6</button>
+            <button class="numbers btn" onclick="addToResult('7')">7</button>
+            <button class="numbers btn" onclick="addToResult('8')">8</button>
+            <button class="numbers btn" onclick="addToResult('9')">9</button>
+            <button class="numbers btn" onclick="addToResult('0')">0</button>
+            <button class="numbers btn" onclick="addToResult('.')">.</button>
+            <button class="result btn" onclick="calculateResult()">=</button>
+        </div>
       </div>
-      <div class="buttons">
-          <button class="operations btn" onclick="addToResult('*')">*</button>
-          <button class="operations btn" onclick="addToResult('/')">/</button>
-          <button class="operations btn" onclick="addToResult('+')">+</button>
-          <button class="operations btn" onclick="addToResult('-')">-</button>
-          <button class="numbers btn" onclick="addToResult('1')">1</button>
-          <button class="numbers btn" onclick="addToResult('2')">2</button>
-          <button class="numbers btn" onclick="addToResult('3')">3</button>
-          <button class="numbers btn" onclick="addToResult('4')">4</button>
-          <button class="numbers btn" onclick="addToResult('5')">5</button>
-          <button class="numbers btn" onclick="addToResult('6')">6</button>
-          <button class="numbers btn" onclick="addToResult('7')">7</button>
-          <button class="numbers btn" onclick="addToResult('8')">8</button>
-          <button class="numbers btn" onclick="addToResult('9')">9</button>
-          <button class="numbers btn" onclick="addToResult('0')">0</button>
-          <button class="numbers btn" onclick="addToResult('.')">.</button>
-          <button class="result btn" onclick="calculateResult()">=</button>
-      </div>
-  </div>
+      <h3 class="footer__text"><em>Built by Lokesh Chandra Sai</em></h3>
+    </div>
     <script>
       let decimalEntered = false;
+      let hasError = false; // Flag variable to track error state
+      let isErrorDisplayed = false; // Flag variable to track if the error message is displayed
+
       function addToResult(value) {
+        if (hasError) {
+          return;
+        }
+
         if (value == '.' && decimalEntered) {
           return;
         }
+
         document.getElementById('result').value += value;
+
         if (value == '.') {
           decimalEntered = true;
         }
       }
 
       function calculateResult() {
+        if (hasError) {
+          return;
+        }
+
         let result = document.getElementById('result').value;
-        let calculatedResult = eval(result);
-        document.getElementById('result').value = calculatedResult;
-        decimalEntered = false;
+
+        try {
+          let calculatedResult = eval(result);
+
+          if (isNaN(calculatedResult) || !isFinite(calculatedResult)) {
+            displayError();
+          } else {
+            document.getElementById('result').value = calculatedResult;
+            decimalEntered = false;
+          }
+        } catch (error) {
+          displayError();
+        }
+      }
+
+      function displayError() {
+        if (!isErrorDisplayed) {
+          document.getElementById('result').value = "Error";
+          decimalEntered = false;
+          hasError = true;
+          isErrorDisplayed = true;
+        }
       }
 
       function clearResult() {
         document.getElementById('result').value = '';
         decimalEntered = false;
+        hasError = false;
+        isErrorDisplayed = false;
+      }
+
+      function clearResultOnebyOne() {
+        if (hasError) {
+          return;
+        }
+
+        let currentResult = document.getElementById('result').value;
+        let updatedResult = currentResult.slice(0, -1);
+        document.getElementById('result').value = updatedResult;
       }
     </script>
     <script type="module" src="/main.js"></script>
