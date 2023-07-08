@@ -84,7 +84,7 @@
 
       function displayError() {
         if (!isErrorDisplayed) {
-          document.getElementById('result').value = "Error";
+          document.getElementById('result').value = "An Error Occured, Please clear.";
           decimalEntered = false;
           hasError = true;
           isErrorDisplayed = true;
@@ -98,15 +98,32 @@
         isErrorDisplayed = false;
       }
 
-      function clearResultOnebyOne() {
-        if (hasError) {
-          return;
-        }
+    function clearResultOnebyOne() {
+      if (hasError) {
+        return;
+      }
 
-        let currentResult = document.getElementById('result').value;
-        let updatedResult = currentResult.slice(0, -1);
+      let currentResult = document.getElementById('result').value;
+
+      // Remove the last character from the result
+      let updatedResult = currentResult.slice(0, -1);
+
+      // Check if the updated result is an operation
+      if (isOperation(updatedResult)) {
+        clearResult(); // Clear the entire result
+      } else {
         document.getElementById('result').value = updatedResult;
       }
+    }
+
+    function isOperation(value) {
+      // Define the set of allowed operations
+      const operations = ['*', '/', '+', '-'];
+
+      // Check if the value is one of the allowed operations
+      return operations.includes(value);
+    }
+
     </script>
     <script type="module" src="/main.js"></script>
   </body>
